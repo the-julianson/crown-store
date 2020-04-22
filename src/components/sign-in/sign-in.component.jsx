@@ -16,17 +16,13 @@ class SignIn extends Component {
   }
 
   handleChange = event => {
-    this.setState(
-      event.target.type === "email"
-        ? { email: event.target.value }
-        : { password: event.target.value }
-    );
-    console.log(this.state.email);
-    console.log(this.state.password);
+    const { value, name} = event.target
+    this.setState({[name]: value})
   };
 
   handleSubmit = event => {
     event.preventDefault();
+    this.setState({email: '', password: ""})
   };
 
   render() {

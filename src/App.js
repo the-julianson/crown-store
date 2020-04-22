@@ -7,24 +7,40 @@ import ShopPage from "./pages/shop/shop-page.component";
 import Header from "./components/header/header.component";
 import PageNotFound from "./pages/page-not-found/page-not-found.component";
 import SignInAndSignUpPage from "./pages/sign-in-sign-up/sign-in-sign-up.component";
-import { auth } from "./services/firebase/firebase.utils";
+import {
+  auth,
+  createUserProfileDocument
+} from "./services/firebase/firebase.utils";
 
 class App extends React.Component {
-  constructor(){
+  constructor() {
     super();
     this.state = {
       currentUser: null
-    }
+    };
   }
 
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    auth.onAuthStateChanged(user => {
-      this.setState({ currentUser: user});
+    this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+      if (userAuth) {
+        const userRef = await createUserProfileDocument(userAuth);
 
-      console.log(user);
-    })
+        // we only get the data if we use the .data
+        userRef.onSnapshot(snapShot => {
+          this.setState({
+            currentUser: {
+              id: snapShot.id,
+              ...snapShot.data()
+            }
+          });
+          console.log(this.state);
+        });
+      }
+      //if the user is none, it will come back as null, we assign it to userAuthv()
+      this.setState({ currentUser: userAuth });
+    });
   }
 
   componentWillUnmount() {
