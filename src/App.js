@@ -12,34 +12,31 @@ import {
   createUserProfileDocument
 } from "./services/firebase/firebase.utils";
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      currentUser: null
-    };
-  }
+import { connect } from "react-redux";
+import { setCurrentUser } from "./redux/user/user.action";
 
+class App extends React.Component {
+ 
   unsubscribeFromAuth = null;
 
   componentDidMount() {
+    const {setCurrentUser} =this.props
+
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
 
         // we only get the data if we use the .data
         userRef.onSnapshot(snapShot => {
-          this.setState({
-            currentUser: {
+          setCurrentUser({
               id: snapShot.id,
               ...snapShot.data()
-            }
           });
           console.log(this.state);
         });
       }
       //if the user is none, it will come back as null, we assign it to userAuthv()
-      this.setState({ currentUser: userAuth });
+      setCurrentUser(userAuth);
     });
   }
 
@@ -50,7 +47,7 @@ class App extends React.Component {
   render() {
     return (
       <div>
-        <Header currentUser={this.state.currentUser} />
+        <Header />
         <Switch>
           <Route exact={true} path="/" component={HomePage} />
           <Route exact={false} path="/shop" component={ShopPage} />
@@ -62,4 +59,10 @@ class App extends React.Component {
   }
 }
 
-export default App;
+// Use mapDispatchToProps to send the payload? 
+// Connect takes 2 arguments, 1st one we don't need because it doesnt need (in this case) props
+const mapDispatchToProps = dispatch => ({
+  setCurrentUser: user => dispatch(setCurrentUser(user))
+});
+export default connect(null, mapDispatchToProps)(App);
+ 

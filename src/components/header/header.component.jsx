@@ -5,6 +5,9 @@ import { ReactComponent as Logo } from "../../assets/original.svg";
 
 import { auth } from "../../services/firebase/firebase.utils";
 
+//HOC for redux
+import { connect } from "react-redux";
+
 const Header = ({ currentUser }) => (
   <div className="header">
     <Link to="/" className="logo-container">
@@ -30,4 +33,11 @@ const Header = ({ currentUser }) => (
   </div>
 );
 
-export default Header;
+//Pass the state as props to the component: mapStateToProps and Connect will be used when a component  needs props.
+const mapStateToProps = state => ({
+  currentUser: state.user.currentUser
+})
+
+// we pass 2 arguments here, the first is the function that allows us to access the state
+//Connect is a HOC
+export default connect(mapStateToProps)(Header);
