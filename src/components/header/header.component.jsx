@@ -7,8 +7,10 @@ import { auth } from "../../services/firebase/firebase.utils";
 
 //HOC for redux
 import { connect } from "react-redux";
+import CartIcon from "../cart-icon/cart-icon.component";
+import CartDropdown from "../cart-dropdown/cart-dropdown.component";
 
-const Header = ({ currentUser }) => (
+const Header = ({ currentUser, hidden }) => (
   <div className="header">
     <Link to="/" className="logo-container">
       <Logo className="logo" />
@@ -16,6 +18,9 @@ const Header = ({ currentUser }) => (
     <div className="options">
       <Link className="option" to="/shop">
         SHOP
+      </Link>
+      <Link className="option" to="/contact">
+        CONTACT
       </Link>
       {currentUser ? (
         <div className="option" onClick={() => auth.signOut()}>
@@ -26,16 +31,17 @@ const Header = ({ currentUser }) => (
           SIGN IN
         </Link>
       )}
-      <Link className="option" to="/contact">
-        CONTACT
-      </Link>
+      <CartIcon/>
     </div>
+    {hidden ? null : <CartDropdown/>}
   </div>
 );
 
 //Pass the state as props to the component: mapStateToProps and Connect will be used when a component  needs props.
-const mapStateToProps = state => ({
-  currentUser: state.user.currentUser
+// Advanced way to destructure: nested objects or arrays. 
+const mapStateToProps = ({user : {currentUser}, cart: { hidden }}) => ({
+  currentUser,
+  hidden
 })
 
 // we pass 2 arguments here, the first is the function that allows us to access the state
