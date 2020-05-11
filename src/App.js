@@ -9,6 +9,7 @@ import ShopPage from "./pages/shop/shop-page.component";
 import Header from "./components/header/header.component";
 import PageNotFound from "./pages/page-not-found/page-not-found.component";
 import SignInAndSignUpPage from "./pages/sign-in-sign-up/sign-in-sign-up.component";
+import CheckOutPage from './pages/checkout/checkout.component';
 import {
   auth,
   createUserProfileDocument
@@ -52,6 +53,7 @@ class App extends React.Component {
         <Switch>
           <Route exact={true} path="/" component={HomePage} />
           <Route exact={false} path="/shop" component={ShopPage} />
+          <Route exact path="/checkout" component={CheckOutPage}/>
           <Route
             path="/signin"
             render={() =>
