@@ -8,6 +8,11 @@ export const selectCartItems = createSelector(
   cart => cart.cartItems
 );
 
+export const selectCartHidden = createSelector(
+  [selectCart],
+  cart => cart.hidden
+)
+
 // we create another because we want to go the nested quantity. 
 export const selectCartItemsCount = createSelector(
   [selectCartItems],

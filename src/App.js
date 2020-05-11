@@ -2,6 +2,8 @@ import React from "react";
 import "./App.css";
 import HomePage from "./pages/homepage/homepage.components";
 import { Route, Switch, Redirect } from "react-router-dom";
+import { createStructuredSelector } from "reselect";
+import { selectCurrentUser } from "./redux/user/user.selector";
 
 import ShopPage from "./pages/shop/shop-page.component";
 import Header from "./components/header/header.component";
@@ -16,11 +18,10 @@ import { connect } from "react-redux";
 import { setCurrentUser } from "./redux/user/user.action";
 
 class App extends React.Component {
- 
   unsubscribeFromAuth = null;
 
   componentDidMount() {
-    const { setCurrentUser} =this.props
+    const { setCurrentUser } = this.props;
 
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
@@ -29,8 +30,8 @@ class App extends React.Component {
         // we only get the data if we use the .data
         userRef.onSnapshot(snapShot => {
           setCurrentUser({
-              id: snapShot.id,
-              ...snapShot.data()
+            id: snapShot.id,
+            ...snapShot.data()
           });
           console.log(this.state);
         });
@@ -51,7 +52,16 @@ class App extends React.Component {
         <Switch>
           <Route exact={true} path="/" component={HomePage} />
           <Route exact={false} path="/shop" component={ShopPage} />
-          <Route path="/signin" render={() => this.props.currentUser ? (<Redirect to="." />) : (<SignInAndSignUpPage/>)} />
+          <Route
+            path="/signin"
+            render={() =>
+              this.props.currentUser ? (
+                <Redirect to="." />
+              ) : (
+                <SignInAndSignUpPage />
+              )
+            }
+          />
           <Route path="/contact" component={PageNotFound} />
         </Switch>
       </div>
@@ -60,13 +70,12 @@ class App extends React.Component {
 }
 
 // To set Redirect from signin page to HomePage if the user.currentUser exists (if someone is logged in)
-const mapToStateProps = ({ user }) => ({
-  currentUser: user.currentUser
-})
-// Use mapDispatchToProps to send the payload? 
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser
+});
+// Use mapDispatchToProps to send the payload?
 // Connect takes 2 arguments, 1st one we don't need because it doesnt need (in this case) props
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
-export default connect(mapToStateProps, mapDispatchToProps)(App);
- 
+export default connect(mapStateToProps, mapDispatchToProps)(App);

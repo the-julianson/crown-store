@@ -2,6 +2,9 @@ import React from "react";
 import "./header.styles.scss";
 import { Link } from "react-router-dom";
 import { ReactComponent as Logo } from "../../assets/original.svg";
+import { selectCartHidden } from "../../redux/cart/cart.selector";
+import { selectCurrentUser } from "../../redux/user/user.selector";
+import { createStructuredSelector } from "reselect";
 
 import { auth } from "../../services/firebase/firebase.utils";
 
@@ -31,18 +34,18 @@ const Header = ({ currentUser, hidden }) => (
           SIGN IN
         </Link>
       )}
-      <CartIcon/>
+      <CartIcon />
     </div>
-    {hidden ? null : <CartDropdown/>}
+    {hidden ? null : <CartDropdown />}
   </div>
 );
 
 //Pass the state as props to the component: mapStateToProps and Connect will be used when a component  needs props.
-// Advanced way to destructure: nested objects or arrays. 
-const mapStateToProps = ({user : {currentUser}, cart: { hidden }}) => ({
-  currentUser,
-  hidden
-})
+// Advanced way to destructure: nested objects or arrays.
+const mapStateToProps = createStructuredSelector({
+  currentUser: selectCurrentUser,
+  hidden: selectCartHidden
+});
 
 // we pass 2 arguments here, the first is the function that allows us to access the state
 //Connect is a HOC
