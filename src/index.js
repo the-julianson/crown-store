@@ -7,14 +7,19 @@ import { BrowserRouter as Router } from "react-router-dom";
 
 // Config Redux, define Provider, and pass it the store
 import { Provider } from "react-redux";
-import store from './redux/store';
+
+//COnfig Persistor for Redux; PersistGate is the component to Wrap our app where we want to persist things.
+import { PersistGate } from "redux-persist/integration/react";
+import { store, persistor } from "./redux/store";
 
 //Provider is the parent, we want everything to access the content of the APP
 // import the store and pass it to the provider
 ReactDOM.render(
   <Provider store={store}>
     <Router>
-      <App />
+      <PersistGate persistor={persistor}>
+        <App />
+      </PersistGate>
     </Router>
   </Provider>,
   document.getElementById("root")
