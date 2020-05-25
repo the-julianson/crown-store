@@ -11,3 +11,6 @@ heroku login
 heroku create crownstore --buildpack https://github.com/mars/create-react-app-buildpack.git
 
 git push heroku master
+
+
+# process.env.NODE_ENV 

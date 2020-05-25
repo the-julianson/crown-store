@@ -10,7 +10,12 @@ import { persistStore } from "redux-persist";
 import rootReducer from './root-reducer';
 
 // Setting the middleware
-const middlewares = [logger];
+const middlewares = [];
+
+//this code will only show redux logs in dev mode (and not in production!)
+if(process.env.NODE_ENV === 'development'){
+    middlewares.push(logger);
+}
 
 //to create store: receives our rootReducer and the return value of applyMiddleware given the argument of the logger (inside the array middlewares)
 // we could have just put the logger in "const store", but by nesting it inside and array then we can use array spread to pass every single array element, 

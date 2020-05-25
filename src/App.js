@@ -34,7 +34,7 @@ class App extends React.Component {
             id: snapShot.id,
             ...snapShot.data()
           });
-          console.log(this.state);
+        
         });
       }
       //if the user is none, it will come back as null, we assign it to userAuthv()
