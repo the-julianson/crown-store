@@ -9,6 +9,8 @@ import { selectCartItems } from "../../redux/cart/cart.selector";
 import { createStructuredSelector } from "reselect";
 import { toggleCartHidden } from "../../redux/cart/cart.actions";
 
+import {Link} from "react-router-dom";
+
 // we just pass dispatch to CartDropDown because it connect will still pass it 
 //even if we don't pass it as a second argument (before we passed the dispatchStateToProps() function which was a dispatch function)
 const CartDropdown = ({ cartItems, history, dispatch, ...otherProps }) => {
@@ -28,7 +30,7 @@ const CartDropdown = ({ cartItems, history, dispatch, ...otherProps }) => {
         }
       </div>
       <CustomButton onClick={() => {
-        history.push('./checkout');
+        history.push('/checkout');
         dispatch(toggleCartHidden())
         }}>
         GO TO CHECKOUT</CustomButton>
