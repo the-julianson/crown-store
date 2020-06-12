@@ -41,6 +41,7 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
   return userRef;
 };
 
+//this function allows me to programatically fill the firestore with the data
 export const addCollectionAndDocuments = async (
   collectionKey,
   objectsToAdd
@@ -49,6 +50,7 @@ export const addCollectionAndDocuments = async (
   //firestore create a collectionRef always
   console.log(collectionRef);
 
+  // batch from firestore allows us to batch our firing to the store (so it will fire all the data at once, instead one at a time)
   const batchRequest = firestore.batch();
   //forEach does not return a new array like map
   objectsToAdd.forEach(obj => {
@@ -59,6 +61,32 @@ export const addCollectionAndDocuments = async (
 
   // now that I have my batch of data to request (set) I can commit
   return await batchRequest.commit();
+};
+
+//function to get the data for the shop page from firestore
+export const convertCollectionSnapshotToMap = collections => {
+  const transformedCollection = collections.docs.map(doc => {
+    //in the .doc we get an array (that is why we can apply map), but we want an object.
+    // we destructure the title and items from the .data() that comes with the .doc
+    const { title, items } = doc.data();
+
+    //we are going to return an object here
+    // encodeURI comes with javaScript, it allows us to pass any character that can't be encoded in URL path and it will convert it to something
+    //that actually can be encoded.
+    // doc actually provides us with an ID so we will use that.
+    return {
+      routeName: encodeURI(title.toLowerCase()),
+      id: doc.id,
+      title,
+      items
+    };
+  });
+
+  // using a reduce function to transform an array into an object.
+  return transformedCollection.reduce((accumulator, collection) => {
+    accumulator[collection.title.toLowerCase()] = collection;
+    return accumulator;
+  }, {});
 };
 
 firebase.initializeApp(config);

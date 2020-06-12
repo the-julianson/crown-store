@@ -13,29 +13,19 @@ import CheckOutPage from "./pages/checkout/checkout.component";
 import {
   auth,
   createUserProfileDocument
-  // to pload data in Firestore
-  // addCollectionAndDocuments
 } from "./services/firebase/firebase.utils";
 
 import { connect } from "react-redux";
 import { setCurrentUser } from "./redux/user/user.action";
-
-//to load data in firestore
-// import { selectCollectionForPreview } from "./redux/shop/shop.selector";
 
 class App extends React.Component {
   unsubscribeFromAuth = null;
 
   componentDidMount() {
     const { setCurrentUser } = this.props;
-    //to load data in firestore
-    // const { collectionsArray } = this.props;
-
     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
       if (userAuth) {
         const userRef = await createUserProfileDocument(userAuth);
-
-        // we only get the data if we use the .data
         userRef.onSnapshot(snapShot => {
           setCurrentUser({
             id: snapShot.id,
@@ -43,12 +33,7 @@ class App extends React.Component {
           });
         });
       }
-      //if the user is none, it will come back as null, we assign it to userAuthv()
       setCurrentUser(userAuth);
-      // addCollectionAndDocuments(
-      //   "collections",
-      //   collectionsArray.map(({ title, items }) => ({ title, items }))
-      // );
     });
   }
 
@@ -81,14 +66,11 @@ class App extends React.Component {
   }
 }
 
-// To set Redirect from signin page to HomePage if the user.currentUser exists (if someone is logged in)
 const mapStateToProps = createStructuredSelector({
   currentUser: selectCurrentUser
   // No need to load the data twice
   // collectionsArray: selectCollectionForPreview
 });
-// Use mapDispatchToProps to send the payload?
-// Connect takes 2 arguments, 1st one we don't need because it doesnt need (in this case) props
 const mapDispatchToProps = dispatch => ({
   setCurrentUser: user => dispatch(setCurrentUser(user))
 });
@@ -96,3 +78,35 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(App);
+
+// unsubscribeFromAuth = null;
+
+//   componentDidMount() {
+//     const { setCurrentUser } = this.props;
+//     //to load data in firestore
+//     // const { collectionsArray } = this.props;
+
+//     this.unsubscribeFromAuth = auth.onAuthStateChanged(async userAuth => {
+//       if (userAuth) {
+//         const userRef = await createUserProfileDocument(userAuth);
+
+//         // we only get the data if we use the .data
+//         userRef.onSnapshot(snapShot => {
+//           setCurrentUser({
+//             id: snapShot.id,
+//             ...snapShot.data()
+//           });
+//         });
+//       }
+//       //if the user is none, it will come back as null, we assign it to userAuthv()
+//       setCurrentUser(userAuth);
+//       // addCollectionAndDocuments(
+//       //   "collections",
+//       //   collectionsArray.map(({ title, items }) => ({ title, items }))
+//       // );
+//     });
+//   }
+
+//   componentWillUnmount() {
+//     this.unsubscribeFromAuth();
+//   }
